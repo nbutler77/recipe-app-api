@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      args: 
+      args:
         - DEV=true
         - UID=1001
     ports:
@@ -22,6 +22,8 @@ services:
       - DB_PASS=changeme
     depends_on:
       - db
+    networks:
+      - my-bridge
 
   db:
     image: postgres:13-alpine
@@ -31,6 +33,17 @@ services:
       - POSTGRES_DB=devdb
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=changeme
+    networks:
+      - my-bridge
 
 volumes:
   dev-db-data:
+
+networks:
+  my-bridge:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.69.0/24
+          gateway: 192.168.69.1
