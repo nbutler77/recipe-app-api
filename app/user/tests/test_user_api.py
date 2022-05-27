@@ -66,7 +66,10 @@ class PublicUserAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-        user_exists = get_user_model().objects.filter(email=payload["email"]).exists()
+        user_exists = get_user_model()\
+            .objects\
+            .filter(email=payload["email"])\
+            .exists()
 
         self.assertFalse(user_exists)
 
@@ -161,7 +164,7 @@ class PrivateUserAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_update_user_profile(self):
-        """Test updating the user profile for the currently authenticated user"""
+        """Test updating the user profile for the authenticated user"""
         payload = {"name": "updated name", "password": "newpassword123"}
 
         res = self.client.patch(ME_URL, payload)
